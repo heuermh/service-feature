@@ -85,24 +85,21 @@ public final class FeatureResource {
                                      final @QueryParam("term") @ApiParam("Sequence Ontology (SO) term name, accession, or URI") String term,
                                      final @QueryParam("rank") @ApiParam("feature rank, must be at least 1") int rank,
                                      final @QueryParam("accession") @ApiParam("accession, must be at least 1") long accession)
-            throws UserInputException {
-
-        try {
-            checkNotNull(locus, "locus must be provided");
-            checkNotNull(term, "term must be provided");
-            checkArgument(rank > 0, "rank must be provided and at least 1");
-            checkArgument(accession > 0L, "accession must be provided and at least 1");
-        }
-        catch (Exception ex) {
-            throw new UserInputException(ex.getMessage(), ex);
-        }
+        throws UserInputException {
 
         if (logger.isTraceEnabled()) {
             logger.trace("getFeature locus " + locus + " term " + term + " rank " + rank + " accession " + accession);
         }
 
         // todo: returning null here sends HTTP 204 No Content which causes trouble for Retrofit
-        return featureService.getFeature(locus, term, rank, accession);
+        Feature feature = null;
+        try {
+            feature = featureService.getFeature(locus, term, rank, accession);
+        }
+        catch (IllegalArgumentException e) {
+            throw new UserInputException(e.getMessage(), e);
+        }
+        return feature;
     }
 
     @POST
@@ -112,17 +109,22 @@ public final class FeatureResource {
             @ApiResponse(code=400, message="a request body must be provided"),
     })
     public Feature createFeature(final FeatureRequest featureRequest) throws UserInputException {
-        try {
-            checkNotNull(featureRequest, "a request body must be provided");
-        }
-        catch (NullPointerException ex) {
-            throw new UserInputException(ex.getMessage(), ex);
-        }
 
+        if (featureRequest == null) {
+            throw new UserInputException("a request body must be provided", null);
+        }
         if (logger.isTraceEnabled()) {
             logger.trace("createFeature locus " + featureRequest.getLocus() + " term " + featureRequest.getTerm() + " rank " + featureRequest.getRank() + " sequence " + featureRequest.getSequence());
         }
-        return featureService.createFeature(featureRequest.getLocus(), featureRequest.getTerm(), featureRequest.getRank(), featureRequest.getSequence());
+
+        Feature feature = null;
+        try {
+            feature = featureService.createFeature(featureRequest.getLocus(), featureRequest.getTerm(), featureRequest.getRank(), featureRequest.getSequence());
+        }
+        catch (IllegalArgumentException e) {
+            throw new UserInputException(e.getMessage(), e);
+        }
+        return feature;
     }
 
     @GET
@@ -131,14 +133,17 @@ public final class FeatureResource {
     @ApiResponses(value = {
             @ApiResponse(code=400, message="locus must be provided"),
     })
-    public List<Feature> listFeatures(final @PathParam("locus") @ApiParam("locus name or URI") String locus) throws UserInputException {
+    public List<Feature> listFeatures(final @PathParam("locus") @ApiParam("locus name or URI") String locus)
+        throws UserInputException {
+
+        List<Feature> features = null;
         try {
-            checkNotNull(locus, "locus must be provided");
+            features = featureService.listFeatures(locus);
         }
-        catch (NullPointerException ex) {
-            throw new UserInputException(ex.getMessage(), ex);
+        catch (IllegalArgumentException e) {
+            throw new UserInputException(e.getMessage(), e);
         }
-        return featureService.listFeatures(locus);
+        return features;
     }
 
     @GET
@@ -150,16 +155,16 @@ public final class FeatureResource {
     })
     public List<Feature> listFeatures(final @PathParam("locus") @ApiParam("locus name or URI") String locus,
                                       final @PathParam("term") @ApiParam("Sequence Ontology (SO) term name, accession, or URI") String term)
-            throws UserInputException {
-        try {
-            checkNotNull(locus, "locus must be provided");
-            checkNotNull(term, "term must be provided");
-        }
-        catch (NullPointerException ex) {
-            throw new UserInputException(ex.getMessage(), ex);
-        }
+        throws UserInputException {
 
-        return featureService.listFeatures(locus, term);
+        List<Feature> features = null;
+        try {
+            features = featureService.listFeatures(locus, term);
+        }
+        catch (IllegalArgumentException e) {
+            throw new UserInputException(e.getMessage(), e);
+        }
+        return features;
     }
 
     @GET
@@ -172,17 +177,17 @@ public final class FeatureResource {
     })
     public List<Feature> listFeatures(final @PathParam("locus") @ApiParam("locus name or URI") String locus,
                                       final @PathParam("term") @ApiParam("Sequence Ontology (SO) term name, accession, or URI") String term,
-                                      final @PathParam("rank") @ApiParam("feature rank, must be at least 1") int rank) throws UserInputException {
-        try {
-            checkNotNull(locus, "locus must be provided");
-            checkNotNull(term, "term must be provided");
-            checkArgument(rank > 0, "rank must be provided and at least 1");
-        }
-        catch (Exception ex) {
-            throw new UserInputException(ex.getMessage(), ex);
-        }
+                                      final @PathParam("rank") @ApiParam("feature rank, must be at least 1") int rank)
+        throws UserInputException {
 
-        return featureService.listFeatures(locus, term, rank);
+        List<Feature> features = null;
+        try {
+            features = featureService.listFeatures(locus, term, rank);
+        }
+        catch (IllegalArgumentException e) {
+            throw new UserInputException(e.getMessage(), e);
+        }
+        return features;
     }
 
     @GET
@@ -197,17 +202,17 @@ public final class FeatureResource {
     public Feature getFeatureByPath(final @PathParam("locus") @ApiParam("locus name or URI") String locus,
                                     final @PathParam("term") @ApiParam("Sequence Ontology (SO) term name, accession, or URI") String term,
                                     final @PathParam("rank") @ApiParam("feature rank, must be at least 1") int rank,
-                                    final @PathParam("accession") @ApiParam("accession, must be at least 1") long accession) throws UserInputException {
+                                    final @PathParam("accession") @ApiParam("accession, must be at least 1") long accession)
+        throws UserInputException {
 
+        // todo: returning null here sends HTTP 204 No Content which causes trouble for Retrofit
+        Feature feature = null;
         try {
-            checkNotNull(locus, "locus must be provided");
-            checkNotNull(term, "term must be provided");
-            checkArgument(rank > 0, "rank must be provided and at least 1");
-            checkArgument(accession > 0L, "accession must be provided and at least 1");
+            feature = featureService.getFeature(locus, term, rank, accession);
         }
-        catch (Exception ex) {
-            throw new UserInputException(ex.getMessage(), ex);
+        catch (IllegalArgumentException e) {
+            throw new UserInputException(e.getMessage(), e);
         }
-        return featureService.getFeature(locus, term, rank, accession);
+        return feature;
     }
 }

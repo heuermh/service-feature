@@ -23,7 +23,6 @@
 package org.nmdp.service.feature.service.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +63,8 @@ final class FeatureServiceImpl implements FeatureService {
                               final int rank,
                               final long accession) {
 
-        checkNotNull(locus, "locus must be given");
-        checkNotNull(term, "term must be given");
+        checkArgument(locus != null, "locus must not be null");
+        checkArgument(term != null, "term must not be null");
         checkArgument(rank > 0, "rank must be at least 1");
         checkArgument(accession > 0L, "accession must be at least 1L");
         return features.get(locus, term, rank, accession);
@@ -78,10 +77,10 @@ final class FeatureServiceImpl implements FeatureService {
                                  final String sequence) {
 
 
-        checkNotNull(locus, "locus must be given");
-        checkNotNull(term, "term must be given");
+        checkArgument(locus != null, "locus must not be null");
+        checkArgument(term != null, "term must not be null");
         checkArgument(rank > 0, "rank must be at least 1");
-        checkNotNull(sequence, "sequence must be given");
+        checkArgument(sequence != null, "sequence must not be null");
         if (!sequencesToFeatures.containsKey(locus, term, rank)) {
             sequencesToFeatures.put(locus, term, rank, new SequencesToFeatures());
         }
@@ -90,7 +89,7 @@ final class FeatureServiceImpl implements FeatureService {
 
     @Override
     public List<Feature> listFeatures(final String locus) {
-        checkNotNull(locus, "locus must be given");
+        checkArgument(locus != null, "locus must not be null");
         ArrayList<Feature> matchingFeatures = new ArrayList<Feature>();
         for (Feature feature : features.values()) {
             if (feature.getLocus().equals(locus)) {
@@ -103,8 +102,8 @@ final class FeatureServiceImpl implements FeatureService {
     @Override
     public List<Feature> listFeatures(final String locus,
                                       final String term) {
-        checkNotNull(locus, "locus must be given");
-        checkNotNull(term, "term must be given");
+        checkArgument(locus != null, "locus must not be null");
+        checkArgument(term != null, "term must not be null");
         ArrayList<Feature> matchingFeatures = new ArrayList<Feature>();
         for (Feature feature : features.values()) {
             if (feature.getLocus().equals(locus) && feature.getTerm().equals(term)) {
@@ -118,8 +117,8 @@ final class FeatureServiceImpl implements FeatureService {
     public List<Feature> listFeatures(final String locus,
                                       final String term,
                                       final int rank) {
-        checkNotNull(locus, "locus must be given");
-        checkNotNull(term, "term must be given");
+        checkArgument(locus != null, "locus must not be null");
+        checkArgument(term != null, "term must not be null");
         checkArgument(rank > 0, "rank must be at least 1");
         ArrayList<Feature> matchingFeatures = new ArrayList<Feature>();
         for (Feature feature : features.values()) {

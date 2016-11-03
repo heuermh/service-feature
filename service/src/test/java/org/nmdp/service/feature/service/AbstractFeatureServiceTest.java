@@ -44,12 +44,12 @@ public abstract class AbstractFeatureServiceTest {
         assertNotNull(featureService);
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testGetFeatureNullLocus() {
         featureService.getFeature(null, "term", 2, 42L);
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testGetFeatureNullTerm() {
         featureService.getFeature("locus", null, 2, 42L);
     }
@@ -64,12 +64,12 @@ public abstract class AbstractFeatureServiceTest {
         featureService.getFeature("locus", "term", 2, 0L);
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testCreateFeatureNullLocus() {
         featureService.createFeature(null, "term", 2, "ACTG");
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testCreateFeatureNullTerm() {
         featureService.createFeature("locus", null, 2, "ACTG");
     }
@@ -79,32 +79,32 @@ public abstract class AbstractFeatureServiceTest {
         featureService.createFeature("locus", "term", 0, "ACTG");
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testCreateFeatureNullSequence() {
         featureService.createFeature("locus", "term", 2, null);
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testListFeaturesNullLocus() {
         featureService.listFeatures(null);
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testListFeaturesLocusTermNullLocus() {
         featureService.listFeatures(null, "term");
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testListFeaturesLocusTermNullTerm() {
         featureService.listFeatures("locus", null);
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testListFeaturesLocusTermRankNullLocus() {
         featureService.listFeatures(null, "term", 1);
     }
 
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public final void testListFeaturesLocusTermRankNullTerm() {
         featureService.listFeatures("locus", null, 1);
     }
